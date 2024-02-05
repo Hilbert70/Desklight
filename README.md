@@ -73,6 +73,7 @@ TODO (ger):
   - im schema: step-dowm-converter 3V3 oder 5V?
   - im schema: solte man en Wiederstand zür Gate der MOSFETS sein für den ESP32, den PCA9685 braucht keins weil die ausgang push-pull ist?
   - misst die Maximalwerte für die Leiterplatte
+  - ESP32 module oder chip?
   
 MUST (ger):
   - im schema: 1K an der Gate von die Powermosfet wegen die Gate Subtrace Kapazität. Ohne dies kein korrektes PWM der LEDs
