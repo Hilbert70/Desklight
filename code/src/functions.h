@@ -12,7 +12,7 @@
 // function protypes
 long StrtoLong(String str);
 void handleStart(long *start, long length);
-void handleLength(long *start,long *length, long increment);
+void handleLength(long *start, long *length, long increment);
 void handleBrightness(long *brightness);
 void handleColour(long *colour);
 

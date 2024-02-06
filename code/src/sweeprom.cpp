@@ -6,18 +6,17 @@
 
 #include "sweeprom.h"
 
-
-//long readLong(int addres){
-//    return ( (EEPROM.read(addres)*256+EEPROM.read(1+addres))*256 + EEPROM.read(2+addres))*256 + EEPROM.read(3+addres);
-//}
+// long readLong(int addres){
+//     return ( (EEPROM.read(addres)*256+EEPROM.read(1+addres))*256 + EEPROM.read(2+addres))*256 + EEPROM.read(3+addres);
+// }
 
 SWEeprom::SWEeprom()
 {
- 
+
     Ewritten = false;
 }
 
-long * SWEeprom::init()
+long *SWEeprom::init()
 {
     uint8_t oldVersion;
 
@@ -56,33 +55,33 @@ long * SWEeprom::init()
     if (oldVersion != EEPROMVERSION) {
         if (oldVersion <= 0) {
             // 'default' values, upgrade to version 1
-            status[0]  = 50;
-            status[1]  = 4;
-            status[2]  = 3;
-            status[3]  = 2;
+            status[0] = 50;
+            status[1] = 4;
+            status[2] = 3;
+            status[3] = 2;
             ssid[0] = '\0';
-            psk[0]  = '\0';
+            psk[0] = '\0';
             hostname[0] = '\0';
         } else {
             read();
             if (oldVersion == 1) {
                 // upgrade to version 2
                 ssid[0] = '\0';
-                psk[0]  = '\0';
+                psk[0] = '\0';
                 hostname[0] = '\0';
             }
-        }    
+        }
         version = EEPROMVERSION;
         write();
     } else {
         read();
     }
     Ewritten = true;
-    
+
     return status;
 }
 
-long * SWEeprom::read()
+long *SWEeprom::read()
 {
     int len;
     uint32_t statusValue;
@@ -99,25 +98,25 @@ long * SWEeprom::read()
         errorMessage = "NVS: failed to read status0";
         return NULL;
     }
-    status[0]= (long )statusValue;
+    status[0] = (long)statusValue;
     errorCode = nvs_get_u32(_nvs_handle, "status1", &statusValue);
     if (errorCode != ESP_OK) {
         errorMessage = "NVS: failed to read status1";
         return NULL;
     }
-    status[1]= (long )statusValue;
+    status[1] = (long)statusValue;
     errorCode = nvs_get_u32(_nvs_handle, "status2", &statusValue);
     if (errorCode != ESP_OK) {
         errorMessage = "NVS: failed to read status2";
         return NULL;
     }
-    status[2]= (long )statusValue;
+    status[2] = (long)statusValue;
     errorCode = nvs_get_u32(_nvs_handle, "status3", &statusValue);
     if (errorCode != ESP_OK) {
         errorMessage = "NVS: failed to read status3";
         return NULL;
     }
-    status[3]= (long )statusValue;
+    status[3] = (long)statusValue;
 
     // read ssid
     errorCode = nvs_get_str(_nvs_handle, "ssid", NULL, &required_size);
@@ -127,18 +126,22 @@ long * SWEeprom::read()
         return NULL;
     }
     len = strlen(ssid);
-    if (len > 31 ) { len = 31; }
+    if (len > 31) {
+        len = 31;
+    }
     ssid[len] = '\0';
 
     // read psk
-    errorCode = nvs_get_str(_nvs_handle, "psk", NULL, &required_size); 
+    errorCode = nvs_get_str(_nvs_handle, "psk", NULL, &required_size);
     errorCode = nvs_get_str(_nvs_handle, "psk", psk, &required_size);
     if (errorCode != ESP_OK) {
         errorMessage = "NVS: failed to read psk";
         return NULL;
     }
     len = strlen(psk);
-    if (len > 63 ) { len = 63; }
+    if (len > 63) {
+        len = 63;
+    }
     psk[len] = '\0';
     // next address at 49 + 64 = 113
     // read hostname
@@ -149,7 +152,9 @@ long * SWEeprom::read()
         return NULL;
     }
     len = strlen(hostname);
-    if (len > 31 ) { len = 31; }
+    if (len > 31) {
+        len = 31;
+    }
     hostname[len] = '\0';
     // next address at 113 + 32 = 145
     return status;
@@ -163,22 +168,22 @@ void SWEeprom::write()
         return;
     }
     // yup the status code is durty
-    errorCode = nvs_set_u32(_nvs_handle, "status0", (uint32_t )status[0]);
+    errorCode = nvs_set_u32(_nvs_handle, "status0", (uint32_t)status[0]);
     if (errorCode != ESP_OK) {
         errorMessage = "NVS: failed to write status0";
         return;
     }
-    errorCode = nvs_set_u32(_nvs_handle, "status1", (uint32_t )status[1]);
+    errorCode = nvs_set_u32(_nvs_handle, "status1", (uint32_t)status[1]);
     if (errorCode != ESP_OK) {
         errorMessage = "NVS: failed to write status1";
         return;
     }
-    errorCode = nvs_set_u32(_nvs_handle, "status2", (uint32_t )status[2]);
+    errorCode = nvs_set_u32(_nvs_handle, "status2", (uint32_t)status[2]);
     if (errorCode != ESP_OK) {
         errorMessage = "NVS: failed to write status2";
         return;
     }
-    errorCode = nvs_set_u32(_nvs_handle, "status3", (uint32_t )status[3]);
+    errorCode = nvs_set_u32(_nvs_handle, "status3", (uint32_t)status[3]);
     if (errorCode != ESP_OK) {
         errorMessage = "NVS: failed to write status3";
         return;
@@ -191,7 +196,7 @@ void SWEeprom::write()
         return;
     }
 
-    // write psk 
+    // write psk
     errorCode = nvs_set_str(_nvs_handle, "psk", psk);
     if (errorCode != ESP_OK) {
         errorMessage = "NVS: failed to write psk";
@@ -203,14 +208,15 @@ void SWEeprom::write()
         errorMessage = "NVS: failed to write hostname";
         return;
     }
-    errorCode  = nvs_commit(_nvs_handle);
+    errorCode = nvs_commit(_nvs_handle);
     if (errorCode != ESP_OK) {
         errorMessage = "NVS: failed to commit";
     }
     Ewritten = true;
 }
 
-long * SWEeprom::getStatus(){
+long *SWEeprom::getStatus()
+{
     return status;
 }
 
@@ -237,86 +243,95 @@ bool SWEeprom::written()
     return Ewritten;
 }
 
-void SWEeprom::setSSID(char * newSSID)
+void SWEeprom::setSSID(char *newSSID)
 {
     int len;
     Ewritten = false;
     len = strlen(newSSID);
-    if (len > 31) len = 31;
-    strncpy(ssid,newSSID,len);
-    ssid[len+1] = '\0';
+    if (len > 31)
+        len = 31;
+    strncpy(ssid, newSSID, len);
+    ssid[len + 1] = '\0';
     // copy: ssid = newSSID;
 }
 
 void SWEeprom::setSSID(String newSSID)
 {
-    int len,i;
+    int len, i;
     Ewritten = false;
     len = newSSID.length();
-    if (len > 31) len = 31;
-    for (i=0; i< 31; i++) {
+    if (len > 31)
+        len = 31;
+    for (i = 0; i < 31; i++) {
         ssid[i] = newSSID[i];
     }
-    ssid[len+1] = '\0';
+    ssid[len + 1] = '\0';
     // copy: ssid = newSSID;
 }
 
-void SWEeprom::setPSK(char * newPSK)
+void SWEeprom::setPSK(char *newPSK)
 {
     int len;
     Ewritten = false;
     len = strlen(newPSK);
-    if (len > 63) len = 63;
-    strncpy(psk,newPSK,len);
-    psk[len+1] = '\0';
+    if (len > 63)
+        len = 63;
+    strncpy(psk, newPSK, len);
+    psk[len + 1] = '\0';
     // copy: ssid = newPSK;
 }
 
 void SWEeprom::setPSK(String newPSK)
 {
-    int len,i;
+    int len, i;
     Ewritten = false;
     len = newPSK.length();
-    if (len > 63) len = 63;
-    for (i=0; i< 31; i++) {
+    if (len > 63)
+        len = 63;
+    for (i = 0; i < 31; i++) {
         psk[i] = newPSK[i];
     }
-    psk[len+1] = '\0';
+    psk[len + 1] = '\0';
     // copy: ssid = newPSK;
 }
 
-void SWEeprom::setHostname(char * newHostname)
+void SWEeprom::setHostname(char *newHostname)
 {
     int len;
     Ewritten = false;
     len = strlen(newHostname);
-    if (len > 31) len = 31;
-    strncpy(hostname,newHostname,len);
-    hostname[len+1] = '\0';
+    if (len > 31)
+        len = 31;
+    strncpy(hostname, newHostname, len);
+    hostname[len + 1] = '\0';
     // copy: ssid = newSSID;
 }
 
 void SWEeprom::setHostname(String newHostname)
 {
-    int len,i;
+    int len, i;
     Ewritten = false;
     len = newHostname.length();
-    if (len > 31) len = 31;
-    for (i=0; i< 31; i++) {
+    if (len > 31)
+        len = 31;
+    for (i = 0; i < 31; i++) {
         hostname[i] = newHostname[i];
     }
-    hostname[len+1] = '\0';
+    hostname[len + 1] = '\0';
     // copy: ssid = newSSID;
 }
 
-char * SWEeprom::getSSID(){
+char *SWEeprom::getSSID()
+{
     return ssid;
 }
 
-char * SWEeprom::getPSK(){
+char *SWEeprom::getPSK()
+{
     return psk;
 }
 
-char * SWEeprom::getHostname(){
+char *SWEeprom::getHostname()
+{
     return hostname;
 }

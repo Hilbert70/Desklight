@@ -11,13 +11,12 @@
 //   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
 //   NEO_RGBW    Pixels are wired for RGBW bitstream (NeoPixel RGBW products)
 
-
-Menu::Menu(const int maxStates,Adafruit_NeoPixel menupixel, uint32_t colours[])
-{   
+Menu::Menu(const int maxStates, Adafruit_NeoPixel menupixel, uint32_t colours[])
+{
     // just copy the colours to local to the class and thats it
-    m_menupixel =menupixel;
+    m_menupixel = menupixel;
     m_maxStates = maxStates;
-    for (int i=0 ; i<m_maxStates; i++)
+    for (int i = 0; i < m_maxStates; i++)
         m_colours[i] = colours[i];
 }
 
@@ -26,10 +25,11 @@ void Menu::setup()
     // called in the arduino setup function
     m_menupixel.begin(); // Initialize NeoPixel strip object (REQUIRED)
     m_menupixel.setPixelColor(0, m_colours[0]);
-    m_menupixel.show();  // Initialize all pixels to 'off'
+    m_menupixel.show(); // Initialize all pixels to 'off'
 }
 
-int Menu::getState(){
+int Menu::getState()
+{
     // yes evil just return the value
     return m_menuState;
 }
@@ -44,7 +44,7 @@ void Menu::setState(int state)
 
 void Menu::bypassMenu(uint8_t br, uint64_t col)
 {
-    m_menupixel.setPixelColor(0,col);
+    m_menupixel.setPixelColor(0, col);
     m_menupixel.setBrightness(br);
     m_menupixel.show();
 }

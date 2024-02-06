@@ -38,35 +38,35 @@
 
 #include "ErriezRotaryFullStep.h"
 
-#define DIR_NONE  0x00      //!< No complete step yet
-#define DIR_CW    0x10      //!< Clockwise step
-#define DIR_CCW   0x20      //!< Counter-clockwise step
+#define DIR_NONE 0x00 //!< No complete step yet
+#define DIR_CW 0x10   //!< Clockwise step
+#define DIR_CCW 0x20  //!< Counter-clockwise step
 
 // Use the full-step state table, clockwise and counter clockwise
 // Emits a code at '00' only
-#define RFS_START          0x00     //!< Rotary full step start
-#define RFS_CW_FINAL       0x01     //!< Rotary full step clock wise final
-#define RFS_CW_BEGIN       0x02     //!< Rotary full step clock begin
-#define RFS_CW_NEXT        0x03     //!< Rotary full step clock next
-#define RFS_CCW_BEGIN      0x04     //!< Rotary full step counter clockwise begin
-#define RFS_CCW_FINAL      0x05     //!< Rotary full step counter clockwise final
-#define RFS_CCW_NEXT       0x06     //!< Rotary full step counter clockwise next
+#define RFS_START 0x00     //!< Rotary full step start
+#define RFS_CW_FINAL 0x01  //!< Rotary full step clock wise final
+#define RFS_CW_BEGIN 0x02  //!< Rotary full step clock begin
+#define RFS_CW_NEXT 0x03   //!< Rotary full step clock next
+#define RFS_CCW_BEGIN 0x04 //!< Rotary full step counter clockwise begin
+#define RFS_CCW_FINAL 0x05 //!< Rotary full step counter clockwise final
+#define RFS_CCW_NEXT 0x06  //!< Rotary full step counter clockwise next
 
 static const PROGMEM uint8_t fullStepTable[7][4] = {
     // RFS_START
-    {RFS_START,      RFS_CW_BEGIN,  RFS_CCW_BEGIN, RFS_START},
+    {RFS_START, RFS_CW_BEGIN, RFS_CCW_BEGIN, RFS_START},
     // RFS_CW_FINAL
-    {RFS_CW_NEXT,    RFS_START,     RFS_CW_FINAL,  RFS_START | DIR_CW},
+    {RFS_CW_NEXT, RFS_START, RFS_CW_FINAL, RFS_START | DIR_CW},
     // RFS_CW_BEGIN
-    {RFS_CW_NEXT,    RFS_CW_BEGIN,  RFS_START,     RFS_START},
+    {RFS_CW_NEXT, RFS_CW_BEGIN, RFS_START, RFS_START},
     // RFS_CW_NEXT
-    {RFS_CW_NEXT,    RFS_CW_BEGIN,  RFS_CW_FINAL,  RFS_START},
+    {RFS_CW_NEXT, RFS_CW_BEGIN, RFS_CW_FINAL, RFS_START},
     // RFS_CCW_BEGIN
-    {RFS_CCW_NEXT,   RFS_START,     RFS_CCW_BEGIN, RFS_START},
+    {RFS_CCW_NEXT, RFS_START, RFS_CCW_BEGIN, RFS_START},
     // RFS_CCW_FINAL
-    {RFS_CCW_NEXT,   RFS_CCW_FINAL, RFS_START,     RFS_START | DIR_CCW},
+    {RFS_CCW_NEXT, RFS_CCW_FINAL, RFS_START, RFS_START | DIR_CCW},
     // RFS_CCW_NEXT
-    {RFS_CCW_NEXT,   RFS_CCW_FINAL, RFS_CCW_BEGIN, RFS_START},
+    {RFS_CCW_NEXT, RFS_CCW_FINAL, RFS_CCW_BEGIN, RFS_START},
 };
 
 /*!
@@ -85,8 +85,7 @@ static const PROGMEM uint8_t fullStepTable[7][4] = {
  *     sensitive or will disable speed detection.
  *     Default is 100.
  */
-RotaryFullStep::RotaryFullStep(uint8_t pin1, uint8_t pin2, bool pullUp, uint8_t sensitivity) :
-    _pin1(pin1), _pin2(pin2), _state(0), _sensitivity(sensitivity)
+RotaryFullStep::RotaryFullStep(uint8_t pin1, uint8_t pin2, bool pullUp, uint8_t sensitivity) : _pin1(pin1), _pin2(pin2), _state(0), _sensitivity(sensitivity)
 {
     if (pullUp) {
         // Enable internal pull-up
@@ -131,15 +130,15 @@ int RotaryFullStep::read()
 
     // Check rotary state
     switch (_state & 0x30) {
-        case DIR_CW:
-            rotaryState = 1;
-            break;
-        case DIR_CCW:
-            rotaryState = -1;
-            break;
-        case DIR_NONE:
-        default:
-            rotaryState = 0;
+    case DIR_CW:
+        rotaryState = 1;
+        break;
+    case DIR_CCW:
+        rotaryState = -1;
+        break;
+    case DIR_NONE:
+    default:
+        rotaryState = 0;
     }
 
     // Check if rotary changed
