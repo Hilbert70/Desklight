@@ -2242,6 +2242,9 @@
   (junction (at 74.93 163.83) (diameter 0) (color 0 0 0 0)
     (uuid 74b372ce-c87a-4e86-b4a5-b7ba6ac06b7a)
   )
+  (junction (at 113.03 69.85) (diameter 0) (color 0 0 0 0)
+    (uuid 8862acef-1cac-4018-8a0f-3c1dc4b2cdf3)
+  )
   (junction (at 125.73 50.8) (diameter 0) (color 0 0 0 0)
     (uuid 8d1bbb24-447e-48f6-9aab-25ef2fe53512)
   )
@@ -4225,6 +4228,31 @@
       (project "deskLight"
         (path "/b32f9917-42b1-4401-9b92-791f624b2b40"
           (reference "#PWR0115") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "power:VCC") (at 113.03 69.85 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid 0d33fc49-355f-449c-80d0-aa7507e4e174)
+    (property "Reference" "#PWR030" (at 113.03 73.66 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Value" "VCC" (at 113.03 66.04 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "" (at 113.03 69.85 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "" (at 113.03 69.85 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 249028f1-2c24-4768-b5d8-4d64f067e3d0))
+    (instances
+      (project "deskLight"
+        (path "/b32f9917-42b1-4401-9b92-791f624b2b40"
+          (reference "#PWR030") (unit 1)
         )
       )
     )
